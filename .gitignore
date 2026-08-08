@@ -1,0 +1,16 @@
+# Binary
+*.test
+*.exe
+
+# Test artifacts
+*.out
+*.coverprofile
+coverage.*
+
+# Editor/IDE
+.idea/
+.vscode/
+
+# Working directories
+work/
+temp/
