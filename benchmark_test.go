@@ -2,6 +2,7 @@ package textemplate_test
 
 import (
 	"bytes"
+	"strings"
 	"testing"
 	ttpl "text/template"
 
@@ -47,7 +48,8 @@ var values = map[string]any{
 }
 
 func BenchmarkTextemplate(b *testing.B) {
-	tpl := textemplate.New(template, "{{", "}}")
+	templ := strings.ReplaceAll(template, ".", "") // Remove dots.
+	tpl := textemplate.New(templ, "{{", "}}")
 
 	b.ResetTimer()
 	for b.Loop() {

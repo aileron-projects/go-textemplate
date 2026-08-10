@@ -53,13 +53,13 @@ Architecture (Using QEMU on linux):
 
 - Allowed tag pattern is `[0-9a-zA-Z_\-]+(?:\.[A-Za-z0-9_\-]+)*`.
   - OK: `foo`, `foo.bar`, `foo.bar.baz`, `foo-bar`, `foo_bar`
-  - NG: `.foo`, `foo.` Tag must not start or end with dot.
-  - NG: `foo..bar` Dot must not be consecutive.
+  - NG: `.foo`, `foo.` Tag must not start or end with dots.
+  - NG: `foo..bar` Dots must not be consecutive.
 - Dots in tags are only used for accessing nested map.
 - Brackets are customizable.
   - `{{`, `}}` are very popular (`{{ foo }}`).
-  - Other patterns are also allowe like `% foo %`, `& foo &`, `^ foo $` etc.
-- Escape bracket if necessary.
+  - Other patterns are also allowed like `% foo %`, `& foo &`, `^ foo $` etc.
+- Escape brackets if necessary.
   - For example, `\{\{` for `{{`.
   - Escape expression is determined by [regexp#QuoteMeta](https://pkg.go.dev/regexp#QuoteMeta).
 - Tags are output as it is if corresponding value was not found.
@@ -216,7 +216,7 @@ No environmental variables defined for this library.
 
 ## Benchmark
 
-### Simple template
+### Simple string only  template
 
 Template:
 
@@ -232,72 +232,27 @@ values := map[string]any{
 }
 ```
 
-Result:
-
-This library is relatively faster than other text template engines (exclude fmt and strings package).
-Allocation is also better (smaller heap and smaller count of)
+Results:
 
 ```txt
                                     Iteration          Speed  Heap size    Alloc count
                                       -------   ------------   --------   ------------
 BenchmarkFmtFprintf-8                 5278726    357.0 ns/op   144 B/op    2 allocs/op
 BenchmarkStringsReplaceAll-8          1416745    785.9 ns/op   528 B/op    6 allocs/op
-BenchmarkTexttemplate-8                847612   2360.0 ns/op   560 B/op   17 allocs/op
+BenchmarkTextTemplate-8                847612   2360.0 ns/op   560 B/op   17 allocs/op
 BenchmarkFasttemplate-8               1400848    731.0 ns/op   344 B/op    9 allocs/op
 BenchmarkTextemplateExecute-8         2457674    467.1 ns/op   256 B/op    4 allocs/op ★
 BenchmarkTextemplateExecuteString-8   1848076    580.1 ns/op   352 B/op    5 allocs/op ★
 BenchmarkTextemplateExecuteWriter-8   2002717    505.3 ns/op   336 B/op    5 allocs/op ★
 ```
 
-### Various types
+### Various types template
 
-Template:
-
-```go
-var template = `
-nil = {{ .nil }}
-string = {{ .string }}
-int = {{ .int }}
-int8 = {{ .int8 }}
-int16 = {{ .int16 }}
-int32 = {{ .int32 }}
-int64 = {{ .int64 }}
-uint = {{ .uint }}
-uint8 = {{ .uint8 }}
-uint16 = {{ .uint16 }}
-uint32 = {{ .uint32 }}
-uint64 = {{ .uint64 }}
-float32 = {{ .float32 }}
-float64 = {{ .float64 }}
-complex64 = {{ .complex64 }}
-complex128 = {{ .complex128 }}
-`
-
-var values = map[string]any{
-    "nil":        nil,
-    "string":     "foo",
-    "int":        123,
-    "int8":       int8(123),
-    "int16":      int16(123),
-    "int32":      int32(123),
-    "int64":      int64(123),
-    "uint":       uint(123),
-    "uint8":      uint8(123),
-    "uint16":     uint16(123),
-    "uint32":     uint32(123),
-    "uint64":     uint64(123),
-    "float32":    float32(1.141592653589),
-    "float64":    float64(1.141592653589),
-    "complex64":  complex64(123 + 456i),
-    "complex128": complex128(123 + 456i),
-}
-```
-
-Result:
+See [./benchmark_test.go](./benchmark_test.go).
 
 ```txt
-                        Iteration          Speed   Heap size    Alloc count
-                          -------   ------------   ---------   ------------
-BenchmarkTextemplate-8    6827022    178.4 ns/op    464 B/op    3 allocs/op ★ This library
-BenchmarkTextTemplate-8    259935   4698.0 ns/op   1136 B/op   38 allocs/op ★ Std text/template
+                       Iteration        Speed        Heap     Allocation
+                         -------   ----------   ---------   ------------
+BenchmarkTextemplate-8    822277   1359 ns/op    496 B/op    3 allocs/op ★ This library
+BenchmarkTextTemplate-8   301384   4457 ns/op   1136 B/op   38 allocs/op ★ Std text/template
 ```
