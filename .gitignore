@@ -12,5 +12,7 @@ coverage.*
 .vscode/
 
 # Working directories
+study/
 work/
 temp/
+tmp/

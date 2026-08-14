@@ -1,18 +1,20 @@
-# go-textemplate
-
-**Simple and fast text template engine for Go.**
+<!-- markdownlint-disable MD033 MD041 -->
 
 <div align="center">
 
-[![GoDoc](https://godoc.org/github.com/aileron-projects/go-textemplate?status.svg)](http://godoc.org/github.com/aileron-projects/go-textemplate)
-[![Test](https://github.com/aileron-projects/go-textemplate/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/aileron-projects/go-textemplate/actions/workflows/test.yaml?query=branch%3Amain)
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/aileron-projects/go-textemplate?sort=semver)](https://github.com/aileron-projects/go-textemplate/releases)
+[![Reference](https://pkg.go.dev/badge/github.com/aileron-projects/go-textemplate.svg)](https://pkg.go.dev/github.com/aileron-projects/go-textemplate)
+[![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/aileron-projects/go-textemplate)
+[![Test](https://github.com/aileron-projects/go-textemplate/actions/workflows/test.yaml/badge.svg)](https://github.com/aileron-projects/go/actions/workflows/test.yaml)
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/aileron-projects/go-textemplate)
-[![OpenSourceInsight](https://badgen.net/badge/open%2Fsource%2F/insight/cyan)](https://deps.dev/go/github.com%2Faileron-projects%2Fgo-textemplate)
-[![OSS Insight](https://badgen.net/badge/OSS/Insight/orange)](https://ossinsight.io/analyze/aileron-projects/go-textemplate)
+[![Insights](https://badgen.net/badge/Insights/open%2Fsource%2Finsights/cyan)](https://deps.dev/go/github.com%2Faileron-projects%go-textemplate)
+[![Insights](https://badgen.net/badge/Insights/OSS%2FInsight/orange)](https://ossinsight.io/analyze/aileron-projects/go-textemplate)
 
 </div>
+
+# go-textemplate
+
+**Simple and fast text template engine for Go.**
 
 ## Features
 
@@ -21,33 +23,7 @@
 - Custom bracket.
 - Various type support.
 
-## Tested Environments
-
-Operating System:
-
-- `Linux`: [ubuntu-latest](https://github.com/actions/runner-images)
-- `Windows`: [windows-latest](https://github.com/actions/runner-images)
-- `macOS`: [macos-latest](https://github.com/actions/runner-images)
-
-Architecture (Using QEMU on linux):
-
-- x86: `amd64`, `386`
-- arm: `arm/v5`, `arm/v6`, `arm/v7`, `arm64`
-- risc: `riscv64`, `loong64`
-- ppc: `ppc64`, `ppc64le`
-- mips: `mips`, `mips64`, `mips64le`, `mipsle`
-- ibm: `s390x`
-
-## Release Cycle
-
-- Releases are made as needed.
-- [Semantic Versioning](https://semver.org/) `vX.Y.Z` is used.
-
-## License
-
-[Apache-2.0](LICENSE)
-
-## Usage
+## Usages
 
 ### Basic Usage
 
@@ -128,6 +104,7 @@ fmt.Println(string(result))
 // complex64 = (123+456i)
 // complex128 = (123+456i)
 // struct = {foo bar}
+// NotFound = {{not-found}}
 ```
 
 ### Nested map value
@@ -206,15 +183,13 @@ fmt.Println(string(result))
 // {{ "Hello": "world!!" }}
 ```
 
-## Build Tags
+## Docs & Examples
 
-No build tags defined for this library.
+- GoDoc: <https://pkg.go.dev/github.com/aileron-projects/go-textemplate>
+- Examples: [example_test.go](./example_test.go)
+- Benchmarks: [benchmark_test.go](./benchmark_test.go)
 
-## Enviromental Variables
-
-No environmental variables defined for this library.
-
-## Benchmark
+## Benchmarks
 
 ### Simple string only  template
 
@@ -256,3 +231,8 @@ See [./benchmark_test.go](./benchmark_test.go).
 BenchmarkTextemplate-8    822277   1359 ns/op    496 B/op    3 allocs/op ★ This library
 BenchmarkTextTemplate-8   301384   4457 ns/op   1136 B/op   38 allocs/op ★ Std text/template
 ```
+
+## References
+
+- [standard text template](https://pkg.go.dev/text/template)
+- [valyala/fasttemplate](https://github.com/valyala/fasttemplate)
