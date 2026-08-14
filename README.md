@@ -234,5 +234,5 @@ BenchmarkTextTemplate-8   301384   4457 ns/op   1136 B/op   38 allocs/op ★ Std
 
 ## References
 
-- [standard text template](https://pkg.go.dev/text/template)
+- [text template package](https://pkg.go.dev/text/template)
 - [valyala/fasttemplate](https://github.com/valyala/fasttemplate)
