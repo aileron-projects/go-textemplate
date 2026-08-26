@@ -108,39 +108,68 @@ func (t *Template) WithNotFound(notFound func(io.Writer, string) error) {
 	t.notFound = notFound
 }
 
-// Execute executes the template and returns result.
+// Execute executes the template with given values.
 // See [Template] for supported data types.
-func (t *Template) Execute(m map[string]any) []byte {
+func (t *Template) Execute(m map[string]any) ([]byte, error) {
 	buf := bytes.NewBuffer(make([]byte, 0, t.bufSize))
 	err := t.execute(buf, m, nil)
-	mustNil(err)
-	return buf.Bytes()
+	return buf.Bytes(), err
 
 }
 
-// ExecuteString executes the template and returns result.
+// MustExecute calls [Execute].
+// It panics if an error was returned from [Execute].
+func (t *Template) MustExecute(m map[string]any) []byte {
+	b, err := t.Execute(m)
+	mustNil(err)
+	return b
+
+}
+
+// ExecuteString executes the template with given values.
 // See [Template] for supported data types.
-func (t *Template) ExecuteString(m map[string]any) string {
+func (t *Template) ExecuteString(m map[string]any) (string, error) {
 	buf := bytes.NewBuffer(make([]byte, 0, t.bufSize))
 	err := t.execute(buf, m, nil)
+	return buf.String(), err
+}
+
+// MustExecuteString calls [ExecuteString].
+// It panics if an error was returned from [ExecuteString].
+func (t *Template) MustExecuteString(m map[string]any) string {
+	s, err := t.ExecuteString(m)
 	mustNil(err)
-	return buf.String()
+	return s
 }
 
 // ExecuteFunc executes the template with tag function.
-func (t *Template) ExecuteFunc(tf TagFunc) []byte {
+func (t *Template) ExecuteFunc(tf TagFunc) ([]byte, error) {
 	buf := bytes.NewBuffer(make([]byte, 0, t.bufSize))
 	err := t.execute(buf, nil, tf)
+	return buf.Bytes(), err
+}
+
+// MustExecuteFunc calls [ExecuteFunc].
+// It panics if an error was returned from [ExecuteFunc].
+func (t *Template) MustExecuteFunc(tf TagFunc) []byte {
+	b, err := t.ExecuteFunc(tf)
 	mustNil(err)
-	return buf.Bytes()
+	return b
 }
 
 // ExecuteStringFunc executes the template with tag function.
-func (t *Template) ExecuteFuncString(tf TagFunc) string {
+func (t *Template) ExecuteFuncString(tf TagFunc) (string, error) {
 	buf := bytes.NewBuffer(make([]byte, 0, t.bufSize))
 	err := t.execute(buf, nil, tf)
+	return buf.String(), err
+}
+
+// MustExecuteFuncString calls [ExecuteFuncString].
+// It panics if an error was returned from [ExecuteFuncString].
+func (t *Template) MustExecuteFuncString(tf TagFunc) string {
+	s, err := t.ExecuteFuncString(tf)
 	mustNil(err)
-	return buf.String()
+	return s
 }
 
 // ExecuteWriter executes the template and writes result to w.
