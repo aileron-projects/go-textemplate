@@ -2,6 +2,7 @@ package textemplate_test
 
 import (
 	"fmt"
+	"io"
 
 	textemplate "github.com/aileron-projects/go-textemplate"
 )
@@ -145,5 +146,22 @@ func ExampleTemplate_WithDefaults() {
 	fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
 	// Output:
 	// Hello world!!
+	// Hello Go!!
+}
+
+func ExampleTemplate_WithNotFound() {
+	values := map[string]any{"value": "Go!!"}
+
+	template := `Hello {{ value }}`
+	tpl := textemplate.New(template, "{{", "}}")
+	tpl.WithNotFound(func(w io.Writer, tag string) error { // Register not found handler.
+		_, err := w.Write([]byte("#NotFound:" + tag))
+		return err
+	})
+
+	fmt.Println(tpl.ExecuteString(nil))    // Hello #NotFound:value
+	fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+	// Output:
+	// Hello #NotFound:value
 	// Hello Go!!
 }

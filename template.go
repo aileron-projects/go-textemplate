@@ -80,10 +80,16 @@ type Template struct {
 	tagEnd   string         // tagEnd is the tag end marker.
 	segs     []*segment     // segs is the segment list.
 	bufSize  int            // bufSize is the initial buffer size.
-	defaults map[string]any // defaultVals are the default values.
+	defaults map[string]any // defaultVals are the default tag values.
+
+	// notFound is called when no tag values were found.
+	notFound func(io.Writer, string) error
 }
 
-// WithDefaults bounds tag-value pairs used by default to the template.
+// WithDefaults asscociates default values to the template.
+// WithDefaults can be called multiple times.
+// Currently there is no way to removed the registered value.
+// It replaces the existing value if duplicate keys were provided.
 func (t *Template) WithDefaults(values map[string]any) {
 	if len(values) == 0 {
 		return
@@ -92,6 +98,14 @@ func (t *Template) WithDefaults(values map[string]any) {
 		t.defaults = make(map[string]any, len(values))
 	}
 	maps.Copy(t.defaults, values)
+}
+
+// WithNotFound registeres not found hadler to the template.
+// notFound will be called as fallback when no tag values were found.
+// It replaces the existing notFound handler when called multiple times.
+// Use WithNotFound(nil) to remove the registered handler.
+func (t *Template) WithNotFound(notFound func(io.Writer, string) error) {
+	t.notFound = notFound
 }
 
 // Execute executes the template and returns result.
@@ -174,10 +188,13 @@ func (t *Template) execute(w io.Writer, m map[string]any, tf TagFunc) (err error
 				continue
 			}
 		}
-		// Tag value was not found.
-		// Write tags as it is so it can be replaced later.
-		_, err = w.Write([]byte(t.tagStart + s.tag + t.tagEnd))
-		mustNil(err)
+		if t.notFound != nil {
+			err = t.notFound(w, s.tag)
+			mustNil(err)
+		} else {
+			_, err = w.Write([]byte(t.tagStart + s.tag + t.tagEnd))
+			mustNil(err)
+		}
 	}
 	return nil
 }
