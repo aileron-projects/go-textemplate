@@ -103,7 +103,7 @@ values := map[string]any{
 }
 
 tpl := textemplate.New(template, "{{", "}}")
-result := tpl.Execute(values)
+result := tpl.MustExecute(values)
 
 fmt.Println(string(result))
 // Output:
@@ -144,7 +144,7 @@ values := map[string]any{
 }
 
 tpl := textemplate.New(template, "{{", "}}")
-result := tpl.Execute(values)
+result := tpl.MustExecute(values)
 
 fmt.Println(string(result))
 // Output:
@@ -164,7 +164,7 @@ values := map[string]any{
 }
 
 tpl := textemplate.New(template, "{{", "}}")
-result := tpl.Execute(values)
+result := tpl.MustExecute(values)
 
 fmt.Println(string(result))
 // Output:
@@ -183,8 +183,8 @@ template := `Hello {{ value }}`
 tpl := textemplate.New(template, "{{", "}}")
 tpl.WithDefaults(defaults) // Register default values.
 
-fmt.Println(tpl.ExecuteString(nil))    // Hello world!!
-fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+fmt.Println(tpl.MustExecuteString(nil))    // Hello world!!
+fmt.Println(tpl.MustExecuteString(values)) // Hello Go!!
 ```
 
 ### NotFound handler
@@ -202,8 +202,8 @@ tpl.WithNotFound(func(w io.Writer, tag string) error { // Register a handler.
     return err
 })
 
-fmt.Println(tpl.ExecuteString(nil))    // Hello #NotFound:value
-fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+fmt.Println(tpl.MustExecuteString(nil))    // Hello #NotFound:value
+fmt.Println(tpl.MustExecuteString(values)) // Hello Go!!
 ```
 
 ### Escape brackets
@@ -215,7 +215,7 @@ values := map[string]any{
 }
 
 tpl := textemplate.New(template, "{{", "}}")
-result := tpl.Execute(values)
+result := tpl.MustExecute(values)
 
 fmt.Println(string(result))
 // Output:

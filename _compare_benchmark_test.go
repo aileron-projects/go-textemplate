@@ -36,7 +36,7 @@ func BenchmarkStringsReplaceAll(b *testing.B) {
 	}
 }
 
-func BenchmarkTextTemplate(b *testing.B) {
+func BenchmarkStdTextTemplate(b *testing.B) {
 	template := `{{.scheme}}://{{.host}}{{.path}}?foo={{.foo}}&bar={{.bar}}#{{.fragment}}`
 	values := map[string]any{
 		"scheme":   "https",

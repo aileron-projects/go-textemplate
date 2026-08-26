@@ -13,7 +13,7 @@ func Example() {
 	val := map[string]any{
 		"value": "world",
 	}
-	fmt.Println(tpl.ExecuteString(val))
+	fmt.Println(tpl.MustExecuteString(val))
 	// Output:
 	// Hello world!!
 }
@@ -61,7 +61,7 @@ NotFound = {{ not-found }}
 	}
 
 	tpl := textemplate.New(template, "{{", "}}")
-	result := tpl.Execute(values)
+	result := tpl.MustExecute(values)
 
 	fmt.Println(string(result))
 	// Output:
@@ -97,7 +97,7 @@ func ExampleTemplate_nestmap() {
 	}
 
 	tpl := textemplate.New(template, "{{", "}}")
-	result := tpl.Execute(values)
+	result := tpl.MustExecute(values)
 
 	fmt.Println(string(result))
 	// Output:
@@ -111,7 +111,7 @@ func ExampleTemplate_escape() {
 	}
 
 	tpl := textemplate.New(template, "{{", "}}")
-	result := tpl.Execute(values)
+	result := tpl.MustExecute(values)
 
 	fmt.Println(string(result))
 	// Output:
@@ -127,7 +127,7 @@ func ExampleTagValueFunc() {
 	}
 
 	tpl := textemplate.New(template, "{{", "}}")
-	result := tpl.Execute(values)
+	result := tpl.MustExecute(values)
 
 	fmt.Println(string(result))
 	// Output:
@@ -142,8 +142,8 @@ func ExampleTemplate_WithDefaults() {
 	tpl := textemplate.New(template, "{{", "}}")
 	tpl.WithDefaults(defaults) // Register default values.
 
-	fmt.Println(tpl.ExecuteString(nil))    // Hello world!!
-	fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+	fmt.Println(tpl.MustExecuteString(nil))    // Hello world!!
+	fmt.Println(tpl.MustExecuteString(values)) // Hello Go!!
 	// Output:
 	// Hello world!!
 	// Hello Go!!
@@ -159,8 +159,8 @@ func ExampleTemplate_WithNotFound() {
 		return err
 	})
 
-	fmt.Println(tpl.ExecuteString(nil))    // Hello #NotFound:value
-	fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+	fmt.Println(tpl.MustExecuteString(nil))    // Hello #NotFound:value
+	fmt.Println(tpl.MustExecuteString(values)) // Hello Go!!
 	// Output:
 	// Hello #NotFound:value
 	// Hello Go!!

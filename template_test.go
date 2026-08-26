@@ -60,7 +60,7 @@ func TestTemplate_bracket(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			tpl := New(tc.tpl, tc.start, tc.end)
-			got := tpl.ExecuteString(map[string]any{"value": "test"})
+			got := tpl.MustExecuteString(map[string]any{"value": "test"})
 			tester.AssertEqual(t, tc.want, got)
 		})
 	}
@@ -87,7 +87,7 @@ func TestTemplate_map(t *testing.T) {
 		for name, tc := range testCases {
 			t.Run(name, func(t *testing.T) {
 				tpl := New(tc.tpl, "{{", "}}")
-				got := tpl.Execute(tc.val)
+				got := tpl.MustExecute(tc.val)
 				tester.AssertEqual(t, tc.want, string(got))
 			})
 		}
@@ -97,7 +97,7 @@ func TestTemplate_map(t *testing.T) {
 		for name, tc := range testCases {
 			t.Run(name, func(t *testing.T) {
 				tpl := New(tc.tpl, "{{", "}}")
-				got := tpl.ExecuteString(tc.val)
+				got := tpl.MustExecuteString(tc.val)
 				tester.AssertEqual(t, tc.want, got)
 			})
 		}
@@ -139,7 +139,7 @@ func TestTemplate_func(t *testing.T) {
 		for name, tc := range testCases {
 			t.Run(name, func(t *testing.T) {
 				tpl := New(tc.tpl, "{{", "}}")
-				got := tpl.ExecuteFunc(tc.tf)
+				got := tpl.MustExecuteFunc(tc.tf)
 				tester.AssertEqual(t, tc.want, string(got))
 			})
 		}
@@ -149,7 +149,7 @@ func TestTemplate_func(t *testing.T) {
 		for name, tc := range testCases {
 			t.Run(name, func(t *testing.T) {
 				tpl := New(tc.tpl, "{{", "}}")
-				got := tpl.ExecuteFuncString(tc.tf)
+				got := tpl.MustExecuteFuncString(tc.tf)
 				tester.AssertEqual(t, tc.want, got)
 			})
 		}
@@ -186,7 +186,7 @@ func TestTemplate_WithDefaults(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			tpl := New(`{{value}}`, "{{", "}}")
 			tpl.WithDefaults(tc.tv)
-			got := tpl.ExecuteString(tc.val)
+			got := tpl.MustExecuteString(tc.val)
 			tester.AssertEqual(t, tc.want, string(got))
 		})
 	}
@@ -207,7 +207,7 @@ func TestTemplate_WithNotFound(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			tpl := New(`{{foo.bar}}`, "{{", "}}")
 			tpl.WithNotFound(tc.nf)
-			got := tpl.ExecuteString(nil)
+			got := tpl.MustExecuteString(nil)
 			tester.AssertEqual(t, tc.want, string(got))
 		})
 	}
