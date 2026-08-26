@@ -14,6 +14,22 @@ func (t *testStringer) String() string {
 	return t.s
 }
 
+type testByter struct {
+	s string
+}
+
+func (t *testByter) Bytes() []byte {
+	return []byte(t.s)
+}
+
+type testAppender struct {
+	s string
+}
+
+func (t *testAppender) Append(dst []byte) []byte {
+	return append(dst, []byte(t.s)...)
+}
+
 func TestAppendTagValue(t *testing.T) {
 	t.Parallel()
 	t.Run("value", func(t *testing.T) {
@@ -42,6 +58,8 @@ func TestAppendTagValue(t *testing.T) {
 			"complex64":            {map[string]any{"key": complex64(1 + 2i)}, "key", "#(1+2i)", true},
 			"complex128":           {map[string]any{"key": complex128(1 - 2i)}, "key", "#(1-2i)", true},
 			"stringer":             {map[string]any{"key": &testStringer{"test"}}, "key", "#test", true},
+			"byter":                {map[string]any{"key": &testByter{"test"}}, "key", "#test", true},
+			"appender":             {map[string]any{"key": &testAppender{"test"}}, "key", "#test", true},
 			"tagfunc":              {map[string]any{"key": TagValueFunc(func(string) []byte { return []byte("test") })}, "key", "#test", true},
 			"struct":               {map[string]any{"key": struct{ x string }{"test"}}, "key", "#{test}", true},
 			"nested map":           {map[string]any{"foo": map[string]any{"bar": 123}}, "foo.bar", "#123", true},

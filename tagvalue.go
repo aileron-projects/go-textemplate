@@ -28,8 +28,6 @@ func appendTagValue(dst []byte, m map[string]any, tag string) (b []byte, found b
 	switch v := value.(type) {
 	case string:
 		b = append(dst, []byte(v)...)
-	case fmt.Stringer:
-		b = append(dst, []byte(v.String())...)
 	case []byte:
 		b = append(dst, v...)
 	case bool:
@@ -62,6 +60,12 @@ func appendTagValue(dst []byte, m map[string]any, tag string) (b []byte, found b
 		b = appendComplex(dst, complex128(v), 'g', -1, 32)
 	case complex128:
 		b = appendComplex(dst, complex128(v), 'g', -1, 64)
+	case interface{ String() string }:
+		b = append(dst, []byte(v.String())...)
+	case interface{ Bytes() []byte }:
+		b = append(dst, v.Bytes()...)
+	case interface{ Append([]byte) []byte }:
+		b = v.Append(dst)
 	case TagValueFunc:
 		b = append(dst, v(tag)...)
 	default:
@@ -70,6 +74,8 @@ func appendTagValue(dst []byte, m map[string]any, tag string) (b []byte, found b
 	return b, true
 }
 
+// appendComplex appends the string form of the complex c.
+// Remove if strconv would provide the corresponding functions.
 func appendComplex(dst []byte, c complex128, fmt byte, prec int, bitSize int) []byte {
 	dst = append(dst, '(')
 	dst = strconv.AppendFloat(dst, float64(real(c)), fmt, prec, bitSize)
