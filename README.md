@@ -23,7 +23,9 @@
 - Various type support
 - Nested map support
 - Default value support
+- Custom not found handler
 - Fast
+- Lightweight
 - Zero dependency
 
 ## Usages
@@ -182,6 +184,25 @@ tpl := textemplate.New(template, "{{", "}}")
 tpl.WithDefaults(defaults) // Register default values.
 
 fmt.Println(tpl.ExecuteString(nil))    // Hello world!!
+fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
+```
+
+### NotFound handler
+
+`WithNotFound` registered a custom not found handler to a template.
+The registered handler will be called as fallback when no tag values were found.
+
+```go
+values := map[string]any{"value": "Go!!"}
+
+template := `Hello {{ value }}`
+tpl := textemplate.New(template, "{{", "}}")
+tpl.WithNotFound(func(w io.Writer, tag string) error { // Register a handler.
+    _, err := w.Write([]byte("#NotFound:" + tag))
+    return err
+})
+
+fmt.Println(tpl.ExecuteString(nil))    // Hello #NotFound:value
 fmt.Println(tpl.ExecuteString(values)) // Hello Go!!
 ```
 

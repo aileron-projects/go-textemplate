@@ -2,6 +2,7 @@ package textemplate
 
 import (
 	"bytes"
+	"io"
 	"regexp"
 	"testing"
 
@@ -186,6 +187,27 @@ func TestTemplate_WithDefaults(t *testing.T) {
 			tpl := New(`{{value}}`, "{{", "}}")
 			tpl.WithDefaults(tc.tv)
 			got := tpl.ExecuteString(tc.val)
+			tester.AssertEqual(t, tc.want, string(got))
+		})
+	}
+}
+func TestTemplate_WithNotFound(t *testing.T) {
+	t.Parallel()
+	testCases := map[string]struct {
+		want string
+		nf   func(io.Writer, string) error // notFound handler
+	}{
+		"default": {`{{foo.bar}}`, nil},
+		"custom handler": {`NotFound:foo.bar`, func(w io.Writer, s string) error {
+			_, err := w.Write([]byte("NotFound:" + s))
+			return err
+		}},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			tpl := New(`{{foo.bar}}`, "{{", "}}")
+			tpl.WithNotFound(tc.nf)
+			got := tpl.ExecuteString(nil)
 			tester.AssertEqual(t, tc.want, string(got))
 		})
 	}
