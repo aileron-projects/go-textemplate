@@ -18,10 +18,13 @@
 
 ## Features
 
-- Fast and lightweight.
-- Tagged value embedding like `Hello {{ world }}`
-- Custom bracket.
-- Various type support.
+- Tagged value embedding
+- Custom bracket
+- Various type support
+- Nested map support
+- Default value support
+- Fast
+- Zero dependency
 
 ## Usages
 
@@ -39,6 +42,21 @@
   - For example, `\{\{` for `{{`.
   - Escape expression is determined by [regexp#QuoteMeta](https://pkg.go.dev/regexp#QuoteMeta).
 - Tags are output as it is if corresponding value was not found.
+
+Supported types:
+
+- **`string`**
+- **`[]byte`**
+- **`bool`**
+- **`int`, `int8`, `int16`, `int32`, `int64`**
+- **`uint`, `uint8`, `uint16`, `uint32`, `uint64`**
+- **`float32`, `float64`**
+- **`complex64, complex128`**
+- **`interface{ String() string }`**
+- **`interface{ Bytes() []bytes }`**
+- **`interface{ Append([]byte) []bytes }`**
+- **`TagValueFunc`**
+- **`others`** : fallback to fmt.Sprint
 
 ```go
 template := `

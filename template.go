@@ -59,23 +59,22 @@ func New(tpl string, start, end string) *Template {
 	}
 }
 
-// Template is simple but fast text template engine.
-// Use [NewTemplate] to instantiate a new Template.
-// Template supports formatting primitive types with the listed way.
-// [fmt.Sprint] is used for fallback.
+// Template is the text template engine.
+// Use [New] to instantiate a new Template.
+// Template supports following types.
 //
-//   - string : v
-//   - fmt.Stringer : v.String()
-//   - []byte : string(v)
-//   - bool : strconv.FormatBool(v)
-//   - int,int8,int16,int32,int64 : strconv.FormatInt(int64(v), 10)
-//   - uint,uint8,uint16,uint32,uint64 : strconv.FormatUint(uint64(v), 10)
-//   - float32 : strconv.FormatFloat(float64(v), 'g', -1, 32)
-//   - float64 : strconv.FormatFloat(float64(v), 'g', -1, 64)
-//   - complex64 : strconv.FormatComplex(complex128(v), 'g', -1, 64)
-//   - complex128 : strconv.FormatComplex(complex128(v), 'g', -1, 128)
-//   - TagValueFunc : v(tag)
-//   - others : fmt.Sprint(v)
+//   - string
+//   - []byte
+//   - bool
+//   - int, int8, int16, int32, int64
+//   - uint, uint8, uint16, uint32, uint64
+//   - float32, float64
+//   - complex64, complex128
+//   - interface{ String() string }
+//   - interface{ Bytes() []bytes }
+//   - interface{ Append([]byte) []bytes }
+//   - TagValueFunc
+//   - others : fallback to fmt.Sprint
 type Template struct {
 	tagStart string         // tagStart is the tag start marker.
 	tagEnd   string         // tagEnd is the tag end marker.
