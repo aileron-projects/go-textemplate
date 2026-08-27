@@ -6,9 +6,6 @@ import (
 	"strings"
 )
 
-// TagValueFunc returns tag value.
-type TagValueFunc func(tag string) []byte
-
 // appendTagValue appends tag value to dst and returns new by slice.
 // It returns false if tag was not found in the m.
 func appendTagValue(dst []byte, m map[string]any, tag string) (b []byte, found bool) {
@@ -66,8 +63,10 @@ func appendTagValue(dst []byte, m map[string]any, tag string) (b []byte, found b
 		b = append(dst, v.Bytes()...)
 	case interface{ Append([]byte) []byte }:
 		b = v.Append(dst)
-	case TagValueFunc:
-		b = append(dst, v(tag)...)
+	case func() []byte:
+		b = append(dst, v()...)
+	case func() string:
+		b = append(dst, v()...)
 	default:
 		b = fmt.Append(dst, v) // Fallback to "%+v"
 	}

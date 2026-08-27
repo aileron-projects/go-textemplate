@@ -73,7 +73,8 @@ func New(tpl string, start, end string) *Template {
 //   - interface{ String() string }
 //   - interface{ Bytes() []bytes }
 //   - interface{ Append([]byte) []bytes }
-//   - TagValueFunc
+//   - func() string
+//   - func() []byte
 //   - others : fallback to fmt.Sprint
 type Template struct {
 	tagStart string         // tagStart is the tag start marker.

@@ -57,7 +57,8 @@ Supported types:
 - **`interface{ String() string }`**
 - **`interface{ Bytes() []bytes }`**
 - **`interface{ Append([]byte) []bytes }`**
-- **`TagValueFunc`**
+- **`func() string`**
+- **`func() []byte`**
 - **`others`** : fallback to fmt.Sprint
 
 ```go
@@ -151,16 +152,15 @@ fmt.Println(string(result))
 // foo.bar.baz = FOO.BAR.BAZ
 ```
 
-### Values by TagValueFunc
+### Values by function
 
-TagValueFunc `func(tag string) []byte` can provide tag values.
+`func() string` and `func() []bytes` can provide tag values.
 
 ```go
-template := `Hello {{ value }}`
+template := `Hello {{ foo }} {{ bar }}`
 values := map[string]any{
-    "value": textemplate.TagValueFunc(func(tag string) []byte {
-        return []byte("world!!")
-    }),
+    "foo": func() []byte { return []byte("world") },
+    "bar": func() string { return "!!" },
 }
 
 tpl := textemplate.New(template, "{{", "}}")
@@ -168,7 +168,7 @@ result := tpl.MustExecute(values)
 
 fmt.Println(string(result))
 // Output:
-// Hello world!!
+// Hello world !!
 ```
 
 ### Default values
