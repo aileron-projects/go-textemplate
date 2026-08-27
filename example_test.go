@@ -118,12 +118,11 @@ func ExampleTemplate_escape() {
 	// {{ "Hello": "world!!" }}
 }
 
-func ExampleTagValueFunc() {
-	template := `Hello {{ value }}`
+func Example_func() {
+	template := `Hello {{ foo }} {{ bar }}`
 	values := map[string]any{
-		"value": textemplate.TagValueFunc(func(tag string) []byte {
-			return []byte("world!!")
-		}),
+		"foo": func() []byte { return []byte("world") },
+		"bar": func() string { return "!!" },
 	}
 
 	tpl := textemplate.New(template, "{{", "}}")
@@ -131,7 +130,7 @@ func ExampleTagValueFunc() {
 
 	fmt.Println(string(result))
 	// Output:
-	// Hello world!!
+	// Hello world !!
 }
 
 func ExampleTemplate_WithDefaults() {
